@@ -19,3 +19,7 @@ variable "file_content" {
   description = "String in the file"
   type        = string 
 }
+
+output "file_content" {
+  value = "Hiii"
+}
