@@ -1,3 +1,3 @@
 output "file_content" {
-  value = "Hiiii!"
+  value = module.dev.file_content
 }
