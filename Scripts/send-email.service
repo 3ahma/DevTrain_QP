@@ -1,0 +1,6 @@
+[Unit]
+Description=Send Daily Email via Gmail SMTP
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/send_email.sh
