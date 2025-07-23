@@ -9,6 +9,8 @@ services:
       - "50000:50000"
     volumes:
       - jenkins_data:/var/jenkins_home
+    environment:
+      - JENKINS_OPTS=-Djenkins.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRUMB_ISSUER=true
     restart: no
 
 volumes:
