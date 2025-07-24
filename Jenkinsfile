@@ -1,4 +1,4 @@
-node(docker-agent){
+node(docker-agent-dynamic){
   def IMAGE_NAME = 'my-app'
   def IMAGE_TAG = "${BUILD_NUMBER}"
   def CONTAINER_NAME = 'my-app-container'

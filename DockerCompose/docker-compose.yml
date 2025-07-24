@@ -15,5 +15,16 @@ services:
       - JENKINS_OPTS=-Djenkins.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRUMB_ISSUER=true
     restart: no
 
+  agent:
+    build: ./jenkins-agent
+    container_name: jenkins-agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_AGENT_NAME=docker-agent # Or whatever you named it
+      - JENKINS_SECRET=5f5547856bc6ed1ce50316b915bdeb04e32da8348c6902c42aa1f1188ced42d9
+
 volumes:
   jenkins_data:
+
