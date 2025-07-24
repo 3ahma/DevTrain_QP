@@ -3,7 +3,10 @@ node('docker-agent-dynamic'){
   def IMAGE_TAG = "${BUILD_NUMBER}"
   def CONTAINER_NAME = 'my-app-container'
   def TEST_PORT = '8000'
-
+  stage('Checkout'){
+    echo "Checkout Stage..."
+    checkout scm
+  }
   stage('Build'){
      
      echo "Building Stage..."
