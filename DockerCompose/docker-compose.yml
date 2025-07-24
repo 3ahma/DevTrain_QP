@@ -7,8 +7,10 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
+    user: root
     volumes:
       - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - JENKINS_OPTS=-Djenkins.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRUMB_ISSUER=true
     restart: no
