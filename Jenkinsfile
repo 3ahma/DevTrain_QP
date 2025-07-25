@@ -25,7 +25,7 @@ node('docker-agent-dynamic'){
     sh """
        docker rm -f ${CONTAINER_NAME} || true
 
-       docker run -d --name ${CONTAINER_NAME} -p ${TEST_PORT}:8000 ${IMAGE_NAME}:${IMAGE_TAG}
+       docker run -d --name ${CONTAINER_NAME} -p ${TEST_PORT}:8000 ${IMAGE_NAME}:${IMAGE_TAG} uvicorn main:app --host 0.0.0.0 --port 8000
 
        sleep 10
 
