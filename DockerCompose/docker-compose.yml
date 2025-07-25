@@ -18,6 +18,7 @@ services:
   agent:
     build: ./jenkins-agent
     container_name: jenkins-agent
+    user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
