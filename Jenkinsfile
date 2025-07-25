@@ -25,13 +25,13 @@ node('docker-agent-dynamic'){
     sh """
        docker rm -f ${CONTAINER_NAME} || true
 
-       docker run -d --name ${CONTAINER_NAME} -p ${TEST_PORT}:8000 ${IMAGE_NAME}:${IMAGE_TAG} uvicorn main:app --host 0.0.0.0 --port 8000
+       docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${IMAGE_NAME}:${IMAGE_TAG}
 
        sleep 10
 
-       curl -f http://localhost:${TEST_PORT}/ || exit 1
+       #curl -f http://localhost:${TEST_PORT}/ || exit 1
 
-       response=\$(curl -s http://localhost:${TEST_PORT}/)
+       response=\$(curl -s http://${CONTAINER_NAME}:8000/)
        echo "API Response: \$response"
 
        echo "\$response" | grep -q "processes" || exit 1
