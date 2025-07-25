@@ -8,12 +8,17 @@ node('docker-agent-dynamic'){
     checkout scm
   }
   stage('Build'){
-     
-     echo "Building Stage..."
-     sh """
-       docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-       docker build -t ${IMAGE_NAME}:latest .
-     """
+          
+    dir('PythonTask') {
+      echo "Building Stage from within 'python-app/' directory..."
+      sh """
+         # Build once, tag twice for efficiency
+         docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+      """
+    }
+         
+    
   }
   stage('Testing'){
     echo 'Testing Stage...'
