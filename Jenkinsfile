@@ -14,9 +14,20 @@ node('docker-agent-dynamic'){
   ]
 
   
+  def branch_name
+  #echo "Jenkins is building from branch: '${env.BRANCH_NAME}'"
 
-  echo "Jenkins is building from branch: '${env.BRANCH_NAME}'"
-  def ENV_CONFIG = config.get(env.BRANCH_NAME, config.DevBranchPython)  
+try{
+  stage('Checkout'){
+    echo "Checkout Stage..."
+    checkout scm
+
+
+    branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+    echo "Successfully checked out branch: '${branchName}'"
+  }
+
+  def ENV_CONFIG = config.get(branch_name, config.DevBranchPython)
 
   def DOCKER_HUB_USERNAME = 'ahmadhussin'
   def IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app-${ENV_CONFIG.imagesuffix}"
@@ -24,11 +35,6 @@ node('docker-agent-dynamic'){
   def CONTAINER_NAME = 'my-app-container'
   def TEST_PORT = '8000'
 
-try{
-  stage('Checkout'){
-    echo "Checkout Stage..."
-    checkout scm
-  }
   stage('Build'){
           
     dir('PythonTask') {
