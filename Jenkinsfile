@@ -1,6 +1,6 @@
 node('docker-agent-dynamic'){
   def DOCKER_HUB_USERNAME = 'ahmadhussin'
-  def IMAGE_NAME = 'my-app'
+  def IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app"
   def IMAGE_TAG = "${BUILD_NUMBER}"
   def CONTAINER_NAME = 'my-app-container'
   def TEST_PORT = '8000'
