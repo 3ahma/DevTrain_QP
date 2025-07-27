@@ -53,7 +53,7 @@ try{
   stage('Testing'){
     echo 'Testing Stage...'
     sh """
-       #docker rm -f ${CONTAINER_NAME} || true
+       docker rm -f ${CONTAINER_NAME} || true
 
        docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${IMAGE_NAME}:${IMAGE_TAG}
 
