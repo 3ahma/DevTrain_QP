@@ -3,6 +3,8 @@ node('docker-agent-dynamic'){
   def IMAGE_TAG = "${BUILD_NUMBER}"
   def CONTAINER_NAME = 'my-app-container'
   def TEST_PORT = '8000'
+
+try{
   stage('Checkout'){
     echo "Checkout Stage..."
     checkout scm
@@ -23,7 +25,7 @@ node('docker-agent-dynamic'){
   stage('Testing'){
     echo 'Testing Stage...'
     sh """
-       docker rm -f ${CONTAINER_NAME} || true
+       #docker rm -f ${CONTAINER_NAME} || true
 
        docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${IMAGE_NAME}:${IMAGE_TAG}
 
@@ -41,14 +43,21 @@ node('docker-agent-dynamic'){
     
 
   }
-  stage('Container Cleaning'){
-    echo 'Cleaning Stage...'
+
+}
+catch (e){
+
+     echo "Error: ${e.message}"
+     throw e
+
+}
+finally{
+
     sh """
       docker stop ${CONTAINER_NAME} || true
       docker rm ${CONTAINER_NAME} || true
-    """  
-
-  }
+    """
+}
 
 }
 
