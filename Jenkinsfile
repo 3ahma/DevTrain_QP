@@ -15,7 +15,6 @@ node('docker-agent-dynamic'){
 
   
   def branch_name
-  #echo "Jenkins is building from branch: '${env.BRANCH_NAME}'"
 
 try{
   stage('Checkout'){
