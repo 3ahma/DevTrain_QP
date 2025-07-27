@@ -25,7 +25,8 @@ try{
     checkout scm
 
 
-    branch_name = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+    def fullBranchRef = sh(script: 'git name-rev --name-only HEAD', returnStdout: true).trim()
+    branch_name = fullBranchRef.split('/').last()
     echo "Successfully checked out branch: '${branch_name}'"
   }
 
