@@ -34,7 +34,7 @@ try{
 
   def DOCKER_HUB_USERNAME = 'ahmadhussin'
   IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app-${ENV_CONFIG.imagesuffix}"
-  IMAGE_TAG = "${BUILD_NUMBER}"
+  IMAGE_TAG = "${env.BUILD_NUMBER}"
   CONTAINER_NAME = 'my-app-container'
   def TEST_PORT = '8000'
 
