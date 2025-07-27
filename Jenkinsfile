@@ -14,7 +14,7 @@ node('docker-agent-dynamic'){
   ]
 
 
-  def ENV_CONFIG = config.get(env.BRANCH_NAME, configurations.dev)  
+  def ENV_CONFIG = config.get(env.BRANCH_NAME, config.dev)  
 
   def DOCKER_HUB_USERNAME = 'ahmadhussin'
   def IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app-${ENV_CONFIG.imagesuffix}"
