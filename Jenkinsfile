@@ -13,7 +13,9 @@ node('docker-agent-dynamic'){
 
   ]
 
+  
 
+  echo "Jenkins is building from branch: '${env.BRANCH_NAME}'"
   def ENV_CONFIG = config.get(env.BRANCH_NAME, config.DevBranchPython)  
 
   def DOCKER_HUB_USERNAME = 'ahmadhussin'
