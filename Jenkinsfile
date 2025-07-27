@@ -1,4 +1,5 @@
 node('docker-agent-dynamic'){
+  def DOCKER_HUB_USERNAME = 'ahmadhussin'
   def IMAGE_NAME = 'my-app'
   def IMAGE_TAG = "${BUILD_NUMBER}"
   def CONTAINER_NAME = 'my-app-container'
@@ -41,6 +42,27 @@ try{
        echo "Testing finished successfully"
     """
     
+
+  }
+  stage('Pushing to Registry'){
+    echo "Registry Pushing Stage..."
+    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]){
+
+        sh """
+           # Log in to Docker Hub using the credentials
+           echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin
+
+           # Push the versioned tag
+           docker push ${IMAGE_NAME}:${IMAGE_TAG}
+
+           # Push the 'latest' tag
+           docker push ${IMAGE_NAME}:latest
+
+           # Log out for security
+           docker logout
+        """
+      
+    }
 
   }
 
