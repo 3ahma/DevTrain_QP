@@ -1,6 +1,23 @@
 node('docker-agent-dynamic'){
+
+  def config = [
+
+     main:[
+     
+       imagesuffix: 'prod'
+     
+     ],
+     DevBranchPython:[
+       imagesuffix: 'dev'
+     ]
+
+  ]
+
+
+  def ENV_CONFIG = config.get(env.BRANCH_NAME, configurations.dev)  
+
   def DOCKER_HUB_USERNAME = 'ahmadhussin'
-  def IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app"
+  def IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app-${ENV_CONFIG.imagesuffix}"
   def IMAGE_TAG = "${BUILD_NUMBER}"
   def CONTAINER_NAME = 'my-app-container'
   def TEST_PORT = '8000'
