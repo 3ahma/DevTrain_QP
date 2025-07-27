@@ -25,8 +25,8 @@ try{
     checkout scm
 
 
-    branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-    echo "Successfully checked out branch: '${branchName}'"
+    branch_name = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+    echo "Successfully checked out branch: '${branch_name}'"
   }
 
   def ENV_CONFIG = config.get(branch_name, config.DevBranchPython)
