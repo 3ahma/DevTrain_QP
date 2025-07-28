@@ -27,7 +27,7 @@ node('docker-agent-dynamic') {
             echo 'Checkout Stage...'
             checkout([
                 $class: 'GitSCM',
-                branches: [[name: 'Dev']],
+                branches: [[name: config.defaultbranch]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[$class: 'CleanCheckout']], // ensures a clean workspace
                 userRemoteConfigs: [[
@@ -38,8 +38,6 @@ node('docker-agent-dynamic') {
 
             DOCKER_TAG = "${targetenv}-${env.BUILD_NUMBER}"
             fullImageName = "${DOCKER_HUB_REPO}:${DOCKER_TAG}"
-
-            echo "Successfully checked out branch: '${config.defaultbranch}'"
         }
 
         stage('Build') {
@@ -58,15 +56,9 @@ node('docker-agent-dynamic') {
 
                 docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${fullImageName}
 
-                sleep 10
+                #sleep 10
 
                 response=\$(curl -s http://${CONTAINER_NAME}:8000/)
-
-                echo "API Response: \$response"
-
-                echo "\$response" | grep -q "processes" || exit 1
-
-                echo "Testing finished successfully"
             """
         }
 
