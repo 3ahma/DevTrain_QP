@@ -56,7 +56,7 @@ node('docker-agent-dynamic') {
 
                 docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${fullImageName}
 
-                sleep 10
+                #sleep 10
 
                 response=\$(curl -s http://${CONTAINER_NAME}:8000/)
             """
