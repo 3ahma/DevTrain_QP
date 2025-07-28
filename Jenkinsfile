@@ -4,6 +4,7 @@ node('docker-agent-dynamic') {
     def CONTAINER_NAME = 'my-app-container'
     def DOCKER_TAG 
     def DOCKER_HUB_REPO = "ahmadhussin/fastapi-process-app"
+    def fullImageName
 
     if (env.JOB_NAME.contains('Prod')) {
         targetenv = 'Prod'
