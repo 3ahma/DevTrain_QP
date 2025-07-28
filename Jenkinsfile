@@ -35,7 +35,7 @@ node('docker-agent-dynamic') {
                 ]]
             ])
 
-            dockerHubTag = "${targetenv}-${env.BUILD_NUMBER}"
+            DOCKER_TAG = "${targetenv}-${env.BUILD_NUMBER}"
             fullImageName = "${DOCKER_HUB_REPO}:${DOCKER_TAG}"
 
             echo "Successfully checked out branch: '${config[targetenv].defaultbranch}'"
