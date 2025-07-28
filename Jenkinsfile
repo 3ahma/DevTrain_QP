@@ -5,6 +5,13 @@ node('docker-agent-dynamic') {
     def DOCKER_TAG 
     def DOCKER_HUB_REPO = "ahmadhussin/fastapi-process-app"
 
+    if (env.JOB_NAME.contains('Prod')) {
+        targetenv = 'Prod'
+    } else {
+        targetenv = 'Dev'
+    }
+
+
     def config = [
         Prod: [
             defaultbranch: 'main'
@@ -27,13 +34,6 @@ node('docker-agent-dynamic') {
                    credentialsId: 'GitHub-Token'
                 ]]
             ])
-
-            if (env.JOB_NAME.contains('Prod')) {
-                targetenv = 'Prod'
-            } else {
-                targetenv = 'Dev'
-            }
-
 
             dockerHubTag = "${targetenv}-${env.BUILD_NUMBER}"
             fullImageName = "${DOCKER_HUB_REPO}:${DOCKER_TAG}"
