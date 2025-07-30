@@ -78,7 +78,7 @@ node('docker-agent-dynamic') {
             withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                 sshagent(credentials: ['vm-ssh-key']) {
                     sh """
-                     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
+                     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
                     """
                 }
             }
