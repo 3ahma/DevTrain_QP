@@ -3,7 +3,7 @@ node('docker-agent-dynamic') {
     def targetenv
     def CONTAINER_NAME = 'my-app-container'
     def DOCKER_TAG 
-    def DOCKER_HUB_REPO = "ahmadhussin/fastapi-process-app"
+    def DOCKER_HUB_REPOS = "ahmadhussin/fastapi-process-app"
     def fullImageName
 
     if (env.JOB_NAME.contains('Prod')) {
@@ -37,7 +37,7 @@ node('docker-agent-dynamic') {
             ])
 
             DOCKER_TAG = "${targetenv}-${env.BUILD_NUMBER}"
-            fullImageName = "${DOCKER_HUB_REPO}:${DOCKER_TAG}"
+            fullImageName = "${DOCKER_HUB_REPOS}:${DOCKER_TAG}"
         }
 
         stage('Build') {
@@ -78,7 +78,7 @@ node('docker-agent-dynamic') {
             withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                 sshagent(credentials: ['vm-ssh-key']) {
                     sh """
-                     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${dockerHubRepo} targetenv=${targetenv.toLowerCase()}"
+                     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
                     """
                 }
             }
