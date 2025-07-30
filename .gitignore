@@ -2,3 +2,4 @@
 **/terraform.tfstate
 **/terraform.tfstate.backup
 **/.terraform.lock.hcl
+**/jenkins_ansible_key
