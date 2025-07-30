@@ -72,6 +72,18 @@ node('docker-agent-dynamic') {
                 """
             }
         }
+       
+        stage('Deploy'){
+
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                sshagent(credentials: ['vm-ssh-key']) {
+                    sh """
+                     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${dockerHubRepo} targetenv=${targetenv.toLowerCase()}"
+                    """
+                }
+            }
+           
+        }
 
     } catch (e) {
         echo "Error: ${e.message}"
