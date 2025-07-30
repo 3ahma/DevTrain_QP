@@ -78,7 +78,7 @@ node('docker-agent-dynamic') {
             withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                 sshagent(credentials: ['vm-ssh-key']) {
                   
-                   sh '''
+                  /* sh '''
                     echo "=== DEBUG: Checking SSH agent keys ==="
                     ssh-add -l || echo "No keys loaded"
 
@@ -87,10 +87,10 @@ node('docker-agent-dynamic') {
             
                     echo "=== Attempting SSH connection to VM ==="
                     ssh -o StrictHostKeyChecking=no ahmad@192.168.0.173 "echo SUCCESS: Jenkins key works!"
-                   '''
-                   // sh """
-                   // ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
-                   // """
+                   '''*/
+                   sh """
+                      ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
+                    """
                 }
             }
            
