@@ -4,11 +4,6 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-variable "instance_name" {
-  description = "The name for the EC2 instance and its resources."
-  type        = string
-}
-
 variable "key_name" {
   description = "Name of the key pair to use for SSH access"
   type        = string

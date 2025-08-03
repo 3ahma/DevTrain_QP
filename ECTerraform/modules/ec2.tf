@@ -15,6 +15,6 @@ resource "aws_instance" "app_server" {
   }
 
   tags = {
-    Name = "${var.naming_prefix}-${var.instance_name}"
+    Name = "${var.naming_prefix}-app-server"
   }
 }
