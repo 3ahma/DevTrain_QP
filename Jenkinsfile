@@ -16,7 +16,7 @@ node('docker-agent-dynamic') {
             defaultbranch: 'main'
         ],
         Dev: [
-            defaultbranch: 'Dev'
+            defaultbranch: 'EC2Task'
         ]
     ][targetenv]
 
