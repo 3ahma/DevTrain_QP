@@ -94,7 +94,18 @@ try{
 
   }
 
-}
+  stage('Deploy'){
+
+     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+         sshagent(credentials: ['ec2-ssh-key']) {
+           sh """
+             ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
+           """
+         }
+    }
+           
+  }
+
 catch (e){
 
      echo "Error: ${e.message}"
