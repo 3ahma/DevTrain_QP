@@ -1,8 +1,3 @@
-/*variable "region" {
-  description = "AWS region to deploy into"
-  type        = string
-}*/
-
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
@@ -19,24 +14,12 @@ variable "key_name" {
   type        = string
 }
 
-variable "tags" {
-  description = "Tags for the EC2 instance"
-  type        = map(string)
-  default     = {}
-}
-
-variable "allowed_ports" {
-  description = "List of ports to allow inbound (e.g., [22, 80, 443])"
-  type        = list(number)
-  default     = [22, 80]
-}
-
 variable "ami_id" {
   description = "The ID of the AMI to use for the EC2 instance."
   type        = string
 }
 
-variable "prefix" {
+variable "naming_prefix" {
   description = "A prefix to be used for naming resources."
   type        = string
 }

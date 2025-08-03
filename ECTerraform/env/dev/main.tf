@@ -1,4 +1,4 @@
-module "dev_server" {
+module "dev" {
   source        = "../../modules"
   ami_id        = data.aws_ami.ubuntu.id
   prefix        = "dev"

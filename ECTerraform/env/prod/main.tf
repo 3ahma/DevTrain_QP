@@ -1,7 +1,7 @@
-module "prod_server" {
+module "prod" {
   source        = "../../modules"
   ami_id        = data.aws_ami.ubuntu.id
-  prefix        = "prod"
+  naming_prefix = "prod"
   environment   = "prod"
   instance_type = "t3.micro"
   instance_name = "app-server"
