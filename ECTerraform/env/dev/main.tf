@@ -1,7 +1,7 @@
 module "dev" {
   source        = "../../modules"
   ami_id        = data.aws_ami.ubuntu.id
-  prefix        = "dev"
+  naming_prefix = "dev"
   environment   = "dev"
   instance_type = "t3.micro"
   instance_name = "app-server"
