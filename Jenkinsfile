@@ -1,113 +1,110 @@
-node('docker-agent-dynamic'){
+node('docker-agent-dynamic') {
 
-  def config = [
+    def targetenv
+    def CONTAINER_NAME = 'my-app-container'
+    def DOCKER_TAG 
+    def DOCKER_HUB_REPOS = "ahmadhussin/fastapi-process-app"
+    def fullImageName
 
-     main:[
-     
-       imagesuffix: 'prod'
-     
-     ],
-     DevBranchPython:[
-       imagesuffix: 'dev'
-     ]
-
-  ]
-
-  
-  def branch_name
-  def IMAGE_NAME
-  def IMAGE_TAG
-  def CONTAINER_NAME
-
-try{
-  stage('Checkout'){
-    echo "Checkout Stage..."
-    checkout scm
-
-
-    def fullBranchRef = sh(script: 'git name-rev --name-only HEAD', returnStdout: true).trim()
-    branch_name = fullBranchRef.split('/').last()
-    echo "Successfully checked out branch: '${branch_name}'"
-  }
-
-  def ENV_CONFIG = config.get(branch_name, config.DevBranchPython)
-
-  def DOCKER_HUB_USERNAME = 'ahmadhussin'
-  IMAGE_NAME = "${DOCKER_HUB_USERNAME}/my-app-${ENV_CONFIG.imagesuffix}"
-  IMAGE_TAG = "${BUILD_NUMBER}"
-  CONTAINER_NAME = 'my-app-container'
-  def TEST_PORT = '8000'
-
-  stage('Build'){
-          
-    dir('PythonTask') {
-      echo "Building Stage from within 'python-app/' directory..."
-      sh """
-         # Build once, tag twice for efficiency
-         docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
-      """
+    if (env.JOB_NAME.contains('Prod')) {
+        targetenv = 'Prod'
+    } else {
+        targetenv = 'Dev'
     }
-         
-    
-  }
-  stage('Testing'){
-    echo 'Testing Stage...'
-    sh """
-       docker rm -f ${CONTAINER_NAME} || true
 
-       docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${IMAGE_NAME}:${IMAGE_TAG}
 
-       sleep 10
+    def config = [
+        Prod: [
+            defaultbranch: 'main'
+        ],
+        Dev: [
+            defaultbranch: 'Dev'
+        ]
+    ][targetenv]
 
-       #curl -f http://localhost:${TEST_PORT}/ || exit 1
+    try {
+        stage('Checkout') {
+            echo 'Checkout Stage...'
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: config.defaultbranch]],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [[$class: 'CleanCheckout']], // ensures a clean workspace
+                userRemoteConfigs: [[
+                   url: 'https://github.com/3ahma/DevTrain_QP.git',
+                   credentialsId: 'GitHub-Token'
+                ]]
+            ])
 
-       response=\$(curl -s http://${CONTAINER_NAME}:8000/)
-       echo "API Response: \$response"
+            DOCKER_TAG = "${targetenv}-${env.BUILD_NUMBER}"
+            fullImageName = "${DOCKER_HUB_REPOS}:${DOCKER_TAG}"
+        }
 
-       echo "\$response" | grep -q "processes" || exit 1
+        stage('Build') {
+            dir('PythonTask') {
+                echo "Building Stage from within 'python-app/' directory..."
+                sh """
+                    docker build -t ${fullImageName} .
+                """
+            }
+        }
 
-       echo "Testing finished successfully"
-    """
-    
+        stage('Test') {
+            echo 'Testing Stage...'
+            sh """
+                docker rm -f ${CONTAINER_NAME} || true
 
-  }
-  stage('Pushing to Registry'){
-    echo "Registry Pushing Stage..."
-    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]){
+                docker run -d --name ${CONTAINER_NAME} --network dockercompose_default ${fullImageName}
 
+                sleep 10
+
+                response=\$(curl -s http://${CONTAINER_NAME}:8000/)
+            """
+        }
+
+        stage('Push to Registry') {
+            echo 'Registry Pushing Stage...'
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                sh """
+                    echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin
+
+                    docker push ${fullImageName}
+                """
+            }
+        }
+       
+        stage('Deploy'){
+
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                sshagent(credentials: ['vm-ssh-key']) {
+                  
+                  /* sh '''
+                    echo "=== DEBUG: Checking SSH agent keys ==="
+                    ssh-add -l || echo "No keys loaded"
+
+                    echo "=== DEBUG: Printing public key being used ==="
+                    ssh-add -L || echo "No keys found"
+            
+                    echo "=== Attempting SSH connection to VM ==="
+                    ssh -o StrictHostKeyChecking=no ahmad@192.168.0.173 "echo SUCCESS: Jenkins key works!"
+                   '''*/
+                   sh """
+                      ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
+                    """
+                }
+            }
+           
+        }
+
+    } catch (e) {
+        echo "Error: ${e.message}"
+        throw e
+
+    } finally {
         sh """
-           # Log in to Docker Hub using the credentials
-           echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin
-
-           # Push the versioned tag
-           docker push ${IMAGE_NAME}:${IMAGE_TAG}
-
-           # Push the 'latest' tag
-           docker push ${IMAGE_NAME}:latest
-
-           # Log out for security
-           docker logout
+            docker stop ${CONTAINER_NAME} || true
+            docker rm ${CONTAINER_NAME} || true
         """
-      
     }
 
-  }
-
 }
-catch (e){
-
-     echo "Error: ${e.message}"
-     throw e
-
-}
-finally{
-
-    sh """
-      docker stop ${CONTAINER_NAME} || true
-      docker rm ${CONTAINER_NAME} || true
-    """
-}
-
-}
-
