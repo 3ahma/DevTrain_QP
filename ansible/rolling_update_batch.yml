@@ -1,13 +1,18 @@
 # ansible/rolling_update_batch.yml
 
-# STEP 1: Explicitly stop and remove the existing container to prevent a race condition.
-# The 'state: absent' command overrides the restart policy.
+# STEP 1: Explicitly stop and remove the existing container.
 - name: "Ensure old container {{ instance.name }} is removed"
   community.docker.docker_container:
     name: "{{ instance.name }}"
     state: absent
 
-# STEP 2: Now that the port is guaranteed to be free, create the new container.
+# STEP 2: Add a short pause to allow the OS to fully release the network port.
+# This is the key to solving the timing-related "port is already allocated" error.
+- name: "Wait for network port to be released"
+  ansible.builtin.pause:
+    seconds: 3
+
+# STEP 3: Now that the port is guaranteed to be free, create the new container.
 - name: "Deploy new container to {{ instance.name }} on port {{ instance.port }}"
   community.docker.docker_container:
     name: "{{ instance.name }}"
@@ -19,7 +24,7 @@
     ports:
       - "{{ instance.port }}:8000"
 
-# STEP 3: Wait for the new container to be healthy.
+# STEP 4: Wait for the new container to be healthy.
 - name: "Wait for new container {{ instance.name }} to be healthy"
   uri:
     url: "http://localhost:{{ instance.port }}/"
