@@ -1,15 +1,18 @@
 ---
 - hosts: servers
-  become: yes # This tells Ansible to use 'sudo' for all commands
+  become: yes
   vars:
-    # These variables will be passed in from the Jenkins pipeline
-    docker_hub_repo: "{{ DOCKER_HUB_REPO }}"
+    # These variables are passed in from the Jenkins pipeline
     full_image_name: "{{ FULL_IMAGE_NAME }}"
-    container_name: "my-app-container-{{ targetenv }}"
     domain_name: "{{ DOMAIN_NAME }}"
+    # Define the two ports for the blue/green (rolling) deployment
+    blue_port: 8001
+    green_port: 8002
 
   tasks:
-    - name: Install required packages
+    # --- Initial Server Setup Tasks (Run Once, but safe to run every time) ---
+
+    - name: Install required packages (Docker, Nginx, Certbot)
       apt:
         name: 
           - docker.io
@@ -19,59 +22,77 @@
         state: present
         update_cache: yes
 
-    - name: Stop the default Nginx service
+    - name: Stop Nginx to allow Certbot to run in standalone mode
       service:
         name: nginx
         state: stopped
+      # This is only necessary for the standalone challenge
+      when: cert_file.stat.exists == false
 
-    - name: Run Certbot to get a certificate (standalone mode)
-      command: "certbot certonly --standalone -d {{ domain_name }} --email sonkun35@gmail.com --agree-tos --no-eff-email -n"
+    - name: Check if certificate already exists
+      stat:
+        path: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
+      register: cert_file
+
+    - name: Run Certbot to get a certificate (if it doesn't exist)
+      command: "certbot certonly --standalone -d {{ domain_name }} --email your-email@example.com --agree-tos --no-eff-email -n"
+      # The 'creates' argument ensures this task only runs once
       args:
         creates: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
 
-    - name: Create Nginx configuration for your app
-      template:
-        src: nginx.conf.j2
-        dest: /etc/nginx/sites-available/myapp
+    # --- Zero-Downtime Rolling Deployment Tasks (Run on every build) ---
 
-    - name: Enable the new Nginx configuration
-      file:
-        src: /etc/nginx/sites-available/myapp
-        dest: /etc/nginx/sites-enabled/myapp
-        state: link
+    - name: Check which port is currently active in Nginx
+      command: "grep 'proxy_pass http://localhost:' /etc/nginx/sites-available/myapp | grep -o '[0-9]\\+'"
+      register: active_port_result
+      ignore_errors: yes
+      changed_when: false
 
-    - name: Remove the default Nginx site
-      file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-      notify: Restart Nginx                      
+    - name: Set active and inactive ports for the rolling update
+      set_fact:
+        active_port: "{{ active_port_result.stdout | default(blue_port) }}"
+        inactive_port: "{{ green_port if (active_port_result.stdout | default(blue_port)) == blue_port else blue_port }}"
 
     - name: Log in to Docker Hub
       community.docker.docker_login:
         username: "{{ DOCKER_USER }}"
         password: "{{ DOCKER_PASS }}"
 
-    - name: Deploy the application container
+    - name: "Deploy new container to inactive port: {{ inactive_port }}"
       community.docker.docker_container:
-        name: "{{ container_name }}"
+        name: "my-app-container-{{ inactive_port }}"
         image: "{{ full_image_name }}"
-        pull: yes # Always pull the latest version of the image
+        pull: yes
         state: started
         restart_policy: always
+        ports:
+          - "{{ inactive_port }}:8000"
+
+    - name: "Wait for new container to be healthy"
+      uri:
+        url: "http://localhost:{{ inactive_port }}/"
+        status_code: 200
+      retries: 5
+      delay: 5
+
+    - name: "Update Nginx to point to the new active port: {{ inactive_port }}"
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/myapp
+      notify: Reload Nginx
+
+    - name: "Remove the old container on port: {{ active_port }}"
+      community.docker.docker_container:
+        name: "my-app-container-{{ active_port }}"
+        state: absent
 
     - name: Log out from Docker Hub
       community.docker.docker_login:
         state: absent
-        
+
   handlers:
-    - name: Restart Nginx
+    - name: Reload Nginx
       service:
         name: nginx
-        state: restarted        
-
-
-
-
-
-
-
+        # Use 'reloaded' for a graceful, zero-downtime Nginx update
+        state: reloaded
