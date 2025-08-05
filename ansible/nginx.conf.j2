@@ -1,26 +1,29 @@
-server {
-    listen 80;
-    server_name {{ domain_name }};
+# /etc/nginx/sites-available/myapp.j2
 
-    # Redirect all HTTP traffic to HTTPS
-    location / {
-        return 301 https://$host$request_uri;
-    }
+# Define a pool of application servers
+upstream myapp_backend {
+  # This block will be populated by Ansible with all container IPs and ports
+  {% for instance in app_instances %}
+  server 127.0.0.1:{{ instance.port }};
+  {% endfor %}
 }
 
 server {
-    listen 443 ssl;
+    listen 80;
+    listen [::]:80;
     server_name {{ domain_name }};
 
-    # SSL Certificate paths
+    listen 443 ssl;
     ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
 
     location / {
-        proxy_pass http://localhost:{{ inactive_port }};
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+      # This proxy_pass value no longer changes during a deploy.
+      # Nginx will automatically load balance across the healthy servers in the upstream.
+      proxy_pass http://myapp_backend;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
