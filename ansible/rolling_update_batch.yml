@@ -10,6 +10,8 @@
     restart_policy: always
     ports:
       - "{{ instance.port }}:8000"
+    replace: yes
+    cleanup: yes  
 
 - name: "Wait for new container {{ instance.name }} to be healthy"
   uri:
