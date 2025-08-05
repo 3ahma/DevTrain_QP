@@ -1,0 +1,19 @@
+# ansible/rolling_update_batch.yml
+# This file contains the tasks to be executed for EACH instance in the loop.
+
+- name: "Deploy new container to {{ instance.name }} on port {{ instance.port }}"
+  community.docker.docker_container:
+    name: "{{ instance.name }}"
+    image: "{{ full_image_name }}"
+    pull: yes
+    state: started
+    restart_policy: always
+    ports:
+      - "{{ instance.port }}:8000"
+
+- name: "Wait for new container {{ instance.name }} to be healthy"
+  uri:
+    url: "http://localhost:{{ instance.port }}/"
+    status_code: 200
+  retries: 5
+  delay: 10

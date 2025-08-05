@@ -1,3 +1,4 @@
+# ansible/playbook.yml (Corrected Version)
 - hosts: servers
   become: yes
   vars:
@@ -10,6 +11,7 @@
       - { name: 'my-app-3', port: 8003 }
 
   tasks:
+    # --- The first few tasks are unchanged ---
     - name: Install required packages (Docker, Nginx, Certbot)
       apt:
         name: 
@@ -36,31 +38,14 @@
         username: "{{ DOCKER_USER }}"
         password: "{{ DOCKER_PASS }}"
 
+    # --- THIS IS THE CORRECTED SECTION ---
     - name: "Perform Rolling Update: Deploy new containers one by one"
+      include_tasks: rolling_update_batch.yml
       loop: "{{ app_instances }}"
       loop_control:
         loop_var: instance
-      
-      serial: 1
-      
-      block:
-        - name: "Deploy new container to {{ instance.name }} on port {{ instance.port }}"
-          community.docker.docker_container:
-            name: "{{ instance.name }}"
-            image: "{{ full_image_name }}"
-            pull: yes
-            state: started
-            restart_policy: always
-            ports:
-              - "{{ instance.port }}:8000"
 
-        - name: "Wait for new container {{ instance.name }} to be healthy"
-          uri:
-            url: "http://localhost:{{ instance.port }}/"
-            status_code: 200
-          retries: 5
-          delay: 10
-
+    # --- The final task is unchanged ---
     - name: Log out from Docker Hub
       community.docker.docker_login:
         state: absent
