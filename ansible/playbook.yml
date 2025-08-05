@@ -6,13 +6,45 @@
     docker_hub_repo: "{{ DOCKER_HUB_REPO }}"
     full_image_name: "{{ FULL_IMAGE_NAME }}"
     container_name: "my-app-container-{{ targetenv }}"
+    domain_name: "{{ DOMAIN_NAME }}"
 
   tasks:
-    - name: Ensure Docker is installed
+    - name: Install required packages
       apt:
-        name: docker.io
+        name: 
+          - docker.io
+          - nginx
+          - certbot
+          - python3-certbot-nginx        
         state: present
         update_cache: yes
+
+    - name: Stop the default Nginx service
+      service:
+        name: nginx
+        state: stopped
+
+    - name: Run Certbot to get a certificate (standalone mode)
+      command: "certbot certonly --standalone -d {{ domain_name }} --email sonkun35@gmail.com --agree-tos --no-eff-email -n"
+      args:
+        creates: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
+
+    - name: Create Nginx configuration for your app
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/myapp
+
+    - name: Enable the new Nginx configuration
+      file:
+        src: /etc/nginx/sites-available/myapp
+        dest: /etc/nginx/sites-enabled/myapp
+        state: link
+
+    - name: Remove the default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Restart Nginx                      
 
     - name: Log in to Docker Hub
       community.docker.docker_login:
@@ -26,9 +58,20 @@
         pull: yes # Always pull the latest version of the image
         state: started
         restart_policy: always
-        ports:
-          - "8000:8000"
 
     - name: Log out from Docker Hub
       community.docker.docker_login:
         state: absent
+        
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted        
+
+
+
+
+
+
+

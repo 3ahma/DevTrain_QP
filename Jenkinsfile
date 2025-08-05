@@ -85,8 +85,8 @@ node('docker-agent-dynamic') {
                     ssh -o StrictHostKeyChecking=no ahmad@192.168.0.173 "echo SUCCESS: Jenkins key works!"
                    '''*/
           sh """
-                      ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
-                    """
+              ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} DOMAIN_NAME=python-processes-app.me targetenv=${targetenv.toLowerCase()}"
+          """
         }
       }
         }
