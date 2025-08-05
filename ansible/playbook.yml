@@ -22,17 +22,18 @@
         state: present
         update_cache: yes
 
-    - name: Stop Nginx to allow Certbot to run in standalone mode
-      service:
-        name: nginx
-        state: stopped
-      # This is only necessary for the standalone challenge
-      when: cert_file.stat.exists == false
-
+    # --- Corrected Task Order ---
     - name: Check if certificate already exists
       stat:
         path: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
       register: cert_file
+
+    - name: Stop Nginx to allow Certbot to run in standalone mode
+      service:
+        name: nginx
+        state: stopped
+      # This condition now works because cert_file is defined
+      when: cert_file.stat.exists == false
 
     - name: Run Certbot to get a certificate (if it doesn't exist)
       command: "certbot certonly --standalone -d {{ domain_name }} --email your-email@example.com --agree-tos --no-eff-email -n"
