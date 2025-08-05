@@ -1,17 +1,25 @@
 # ansible/rolling_update_batch.yml
 
+# STEP 1: Explicitly stop and remove the existing container to prevent a race condition.
+# The 'state: absent' command overrides the restart policy.
+- name: "Ensure old container {{ instance.name }} is removed"
+  community.docker.docker_container:
+    name: "{{ instance.name }}"
+    state: absent
+
+# STEP 2: Now that the port is guaranteed to be free, create the new container.
 - name: "Deploy new container to {{ instance.name }} on port {{ instance.port }}"
   community.docker.docker_container:
     name: "{{ instance.name }}"
     image: "{{ full_image_name }}"
-    pull: yes
     state: started
+    pull: yes
     restart_policy: always
+    cleanup: yes
     ports:
       - "{{ instance.port }}:8000"
-    recreate: yes  # <-- CORRECT: Aligned with 'ports'
-    cleanup: yes   # <-- CORRECT: Aligned with 'ports'
 
+# STEP 3: Wait for the new container to be healthy.
 - name: "Wait for new container {{ instance.name }} to be healthy"
   uri:
     url: "http://localhost:{{ instance.port }}/"
