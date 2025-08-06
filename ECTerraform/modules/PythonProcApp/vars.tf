@@ -29,3 +29,8 @@ variable "disk_size" {
   type        = number
   default     = 8
 }
+
+variable "domain_name" {
+  description = "The domain name to manage in Route 53 (e.g., my-app.com)."
+  type        = string
+}
