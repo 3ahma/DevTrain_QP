@@ -21,7 +21,7 @@
         update_cache: yes
 
     - name: Run Certbot to get/renew a certificate
-      command: "certbot --nginx -d {{ domain_name }} --email your-email@example.com --agree-tos --no-eff-email -n"
+      command: "certbot --nginx -d {{ domain_name }} --email hussinw70@gmail.com --agree-tos --no-eff-email -n"
       args:
         creates: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
 
