@@ -1,8 +1,9 @@
 node('docker-agent-dynamic') {
+
     def targetenv
     def CONTAINER_NAME = 'my-app-container'
-    def DOCKER_TAG
-    def DOCKER_HUB_REPOS = 'ahmadhussin/fastapi-process-app'
+    def DOCKER_TAG 
+    def DOCKER_HUB_REPOS = "ahmadhussin/fastapi-process-app"
     def fullImageName
 
     if (env.JOB_NAME.contains('Prod')) {
@@ -10,6 +11,7 @@ node('docker-agent-dynamic') {
     } else {
         targetenv = 'Dev'
     }
+
 
     def config = [
         Prod: [
@@ -70,33 +72,39 @@ node('docker-agent-dynamic') {
                 """
             }
         }
+       
+        stage('Deploy'){
 
-        stage('Deploy') {
             withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                 sshagent(credentials: ['vm-ssh-key']) {
+                  
                   /* sh '''
                     echo "=== DEBUG: Checking SSH agent keys ==="
                     ssh-add -l || echo "No keys loaded"
 
                     echo "=== DEBUG: Printing public key being used ==="
                     ssh-add -L || echo "No keys found"
-
+            
                     echo "=== Attempting SSH connection to VM ==="
                     ssh -o StrictHostKeyChecking=no ahmad@192.168.0.173 "echo SUCCESS: Jenkins key works!"
                    '''*/
-                    sh """
+                   sh """
                       ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOCKER_HUB_REPO=${DOCKER_HUB_REPOS} targetenv=${targetenv.toLowerCase()}"
                     """
                 }
             }
+           
         }
+
     } catch (e) {
         echo "Error: ${e.message}"
         throw e
+
     } finally {
         sh """
             docker stop ${CONTAINER_NAME} || true
             docker rm ${CONTAINER_NAME} || true
         """
     }
+
 }

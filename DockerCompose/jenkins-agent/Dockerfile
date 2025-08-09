@@ -5,7 +5,7 @@ FROM jenkins/inbound-agent
 USER root
 
 # Install Docker CLI and Git
-RUN apt-get update && apt-get install -y docker.io git
+RUN apt-get update && apt-get install -y docker.io git ansible
 
 # Switch back to the jenkins user
 USER jenkins
