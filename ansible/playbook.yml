@@ -31,6 +31,19 @@
         dest: /etc/nginx/sites-available/{{ domain_name }}
       notify: Reload Nginx
 
+    - name: Enable the new Nginx configuration
+      file:
+        src: "/etc/nginx/sites-available/{{ domain_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+        state: link
+        force: yes
+
+    - name: Remove the default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Reload Nginx  
+
     - name: Log in to Docker Hub
       community.docker.docker_login:
         username: "{{ DOCKER_USER }}"
