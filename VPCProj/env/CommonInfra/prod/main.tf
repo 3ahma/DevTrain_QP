@@ -1,9 +1,22 @@
-module "prod" {
-  source        = "../../modules"
-  ami_id        = data.aws_ami.ubuntu.id
-  naming_prefix = "prod"
-  environment   = "prod"
-  instance_type = "t3.micro"
-  disk_size     = 30
-  key_name      = aws_key_pair.prod_key.key_name
+locals {
+  name = "my-app"
+  tags = {
+    Project     = "My App"
+    ManagedBy   = "Terraform"
+    Environment = "prod"
+  }
+}
+
+module "vpc" {
+  source = "../../../modules/CommonInfra"
+
+  Environment = local.tags.Environment
+
+  name             = local.name
+  cidr             = "10.0.0.0/16"
+  azs              = ["us-east-1a", "us-east-1b"]
+  public_subnets   = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnets  = ["10.0.3.0/24", "10.0.4.0/24"]
+  database_subnets = ["10.0.5.0/24", "10.0.6.0/24"]
+  //tags             = local.tags
 }

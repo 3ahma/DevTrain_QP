@@ -16,3 +16,12 @@ resource "aws_route53_record" "www" {
   ttl      = 60
   records  = [each.value.public_ip]
 }
+
+resource "aws_route53_record" "asg_record" {
+  for_each = { for k, v in var.instance_type : k => v if lookup(v, "scalable", false) }
+  zone_id  = aws_route53_zone.my_app_zone.zone_id
+  name     = "${each.key}.${var.domain_name}"
+  type     = "CNAME"
+  ttl      = 60
+  records  = [aws_lb.dev_nlb.dns_name]
+}

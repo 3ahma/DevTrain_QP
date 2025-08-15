@@ -10,3 +10,11 @@ data "aws_ami" "ubuntu" {
   }
   owners = ["099720109477"]
 }
+
+
+data "terraform_remote_state" "vpc" {
+  backend = "local"
+  config = {
+    path = "../../CommonInfra/dev/terraform.tfstate"
+  }
+}

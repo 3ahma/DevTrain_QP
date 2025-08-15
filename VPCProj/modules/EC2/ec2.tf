@@ -1,10 +1,14 @@
 resource "aws_instance" "app_server" {
-  ami           = var.ami_id
-  for_each      = var.instance_type
+  ami = var.ami_id
+
+  for_each = {
+    for k, v in var.instance_type :
+    k => v if !lookup(v, "scalable", false)
+  }
 
   instance_type = each.value.instance_type
   key_name      = var.key_name
-  subnet_id = each.value.subnet_id
+  subnet_id     = each.value.subnet_id
 
   vpc_security_group_ids = [
     aws_security_group.ssh.id,
@@ -22,3 +26,12 @@ resource "aws_instance" "app_server" {
     Name = "${var.naming_prefix}-app-server-${each.value.type}"
   }
 }
+
+
+
+
+
+
+
+
+

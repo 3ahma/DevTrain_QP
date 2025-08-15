@@ -29,6 +29,11 @@ variable "database_subnets" {
 }
 
 variable "name" {
-   description = "VPC's name"
-   type = string  
+  description = "VPC's name"
+  type        = string
+}
+
+variable "Environment" {
+  description = "Environment Name"
+  type        = string
 }

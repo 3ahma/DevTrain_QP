@@ -1,6 +1,12 @@
 variable "instance_type" {
   description = "Map of instance configs"
   type = map(object({
+
+    scalable         = optional(bool, false) # true → goes to ASG, false → standalone EC2
+    min_size         = optional(number, 1)   # ASG minimum instances
+    max_size         = optional(number, 3)   # ASG maximum instances
+    desired_capacity = optional(number, 1)   # ASG desired instances
+
     instance_type = string
     disk_size     = number
     subnet_id     = string
@@ -44,3 +50,7 @@ variable "vpc_id" {
   type = string
 }
 
+variable "private_subnet_ids" {
+  description = "A list of public subnet IDs for the NLB."
+  type        = list(string)
+}
