@@ -1,0 +1,971 @@
+{
+  "version": 4,
+  "terraform_version": "1.12.2",
+  "serial": 115,
+  "lineage": "02f75841-e8e8-3a8b-0119-9f0afbe2778c",
+  "outputs": {},
+  "resources": [
+    {
+      "mode": "data",
+      "type": "aws_ami",
+      "name": "ubuntu",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "allow_unsafe_filter": null,
+            "architecture": "x86_64",
+            "arn": "arn:aws:ec2:us-east-1::image/ami-0b529f3487c2c0e7f",
+            "block_device_mappings": [
+              {
+                "device_name": "/dev/sda1",
+                "ebs": {
+                  "delete_on_termination": "true",
+                  "encrypted": "false",
+                  "iops": "0",
+                  "snapshot_id": "snap-0e615af81e4ab6d46",
+                  "throughput": "0",
+                  "volume_initialization_rate": "0",
+                  "volume_size": "8",
+                  "volume_type": "gp2"
+                },
+                "no_device": "",
+                "virtual_name": ""
+              },
+              {
+                "device_name": "/dev/sdb",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral0"
+              },
+              {
+                "device_name": "/dev/sdc",
+                "ebs": {},
+                "no_device": "",
+                "virtual_name": "ephemeral1"
+              }
+            ],
+            "boot_mode": "uefi-preferred",
+            "creation_date": "2025-05-08T11:41:01.000Z",
+            "deprecation_time": "2027-05-08T11:41:01.000Z",
+            "description": "Canonical, Ubuntu, 22.04, amd64 jammy image",
+            "ena_support": true,
+            "executable_users": null,
+            "filter": [
+              {
+                "name": "name",
+                "values": [
+                  "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20250508"
+                ]
+              },
+              {
+                "name": "virtualization-type",
+                "values": [
+                  "hvm"
+                ]
+              }
+            ],
+            "hypervisor": "xen",
+            "id": "ami-0b529f3487c2c0e7f",
+            "image_id": "ami-0b529f3487c2c0e7f",
+            "image_location": "amazon/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20250508",
+            "image_owner_alias": "amazon",
+            "image_type": "machine",
+            "imds_support": "",
+            "include_deprecated": false,
+            "kernel_id": "",
+            "last_launched_time": "",
+            "most_recent": true,
+            "name": "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20250508",
+            "name_regex": null,
+            "owner_id": "099720109477",
+            "owners": [
+              "099720109477"
+            ],
+            "platform": "",
+            "platform_details": "Linux/UNIX",
+            "product_codes": [],
+            "public": true,
+            "ramdisk_id": "",
+            "region": "us-east-1",
+            "root_device_name": "/dev/sda1",
+            "root_device_type": "ebs",
+            "root_snapshot_id": "snap-0e615af81e4ab6d46",
+            "sriov_net_support": "simple",
+            "state": "available",
+            "state_reason": {
+              "code": "UNSET",
+              "message": "UNSET"
+            },
+            "tags": {},
+            "timeouts": null,
+            "tpm_support": "",
+            "uefi_data": null,
+            "usage_operation": "RunInstances",
+            "virtualization_type": "hvm"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "terraform_remote_state",
+      "name": "vpc",
+      "provider": "provider[\"terraform.io/builtin/terraform\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "backend": "local",
+            "config": {
+              "value": {
+                "path": "../../CommonInfra/dev/terraform.tfstate"
+              },
+              "type": [
+                "object",
+                {
+                  "path": "string"
+                }
+              ]
+            },
+            "defaults": null,
+            "outputs": {
+              "value": {
+                "database_subnets": [
+                  "subnet-01dbec110911b45d5",
+                  "subnet-0cbac7a2cc2c0d76a"
+                ],
+                "private_subnets": [
+                  "subnet-0ee22094b5949d1b0",
+                  "subnet-048ccb10188cbff52"
+                ],
+                "public_subnets": [
+                  "subnet-071d7538a154848df",
+                  "subnet-0fd8e5a8fe2b6aba8"
+                ]
+              },
+              "type": [
+                "object",
+                {
+                  "database_subnets": [
+                    "tuple",
+                    [
+                      "string",
+                      "string"
+                    ]
+                  ],
+                  "private_subnets": [
+                    "tuple",
+                    [
+                      "string",
+                      "string"
+                    ]
+                  ],
+                  "public_subnets": [
+                    "tuple",
+                    [
+                      "string",
+                      "string"
+                    ]
+                  ]
+                }
+              ]
+            },
+            "workspace": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_key_pair",
+      "name": "dev_key",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:081009271281:key-pair/dev-instance-key",
+            "fingerprint": "3b:07:c7:90:f8:f0:a0:78:77:63:b4:d5:06:03:34:06",
+            "id": "dev-instance-key",
+            "key_name": "dev-instance-key",
+            "key_name_prefix": "",
+            "key_pair_id": "key-071c4512face5065c",
+            "key_type": "rsa",
+            "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCsWoTIq3ZCG0aUtPQZUMHPMJAPUg9PlrRhPDAdIaI0TAzlULvDxWRusJ1m5avcMVkRhaGTEsJZCvhY1KDaecsnPQgN2WJ1hOi9M/ZLB+vsY4BStS1c5vaSv1HM5ur0KhMJSNxpCbpQIdkBTMJcW9fusySbGJWh+t9xc8BdaF4IHbRsa6ONBTgk+zPQLhXlOuL6fQDuStzj91xgZHbnaNc4lxoxmeNK4p2O/lJJleUuXAyY7VWOp25+QyVvKgjaraAI5yymrtDL+K/heatNagGj19mKlt4SYcXmrDxtur3k/DbcdyHKWrJgf/2fV9VnekOA1neJX61Uem/M+aMyHpNlE2r3MjFiTuD/3vdYcryHegHgOWesqK7EcIsFd/wwyIwWGh6EjS1PyuEcKnTJfBtpbFOYB7knRKKQjt7lu225lt0ZoPaNmTSpOFB/J3nbSO8cm8acKtGuE2cJfBaljucdoKmRGTpY3C3ChRV7Ie+t1O8LmLPkFnOqM/slOyJpsInUm0o2FNchgUgExjtIZylyK53r/+5zzowI1IKbi1cjHXPv00mp0DWYXzrLPj2EYtgT12XrKuN0+0TUI9WIzP+UotR/+Z3NDtnGlZR8Simv0pwci9PRxwL0Xg8aBboEYaE3lbyXaMXNmeF4WnX5nA+Ufnsdp1fI4N4PL2GUc2Br8w==",
+            "region": "us-east-1",
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            }
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "tls_private_key.dev_ssh_key"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "local_file",
+      "name": "dev_private_key_pem",
+      "provider": "provider[\"registry.terraform.io/hashicorp/local\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "content": "-----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----\n",
+            "content_base64": null,
+            "content_base64sha256": "o9HJyNpFRU2v5ogbLoE6p1Db1cqinIM+JV+lcL35ikQ=",
+            "content_base64sha512": "umCiyY/UwcIwymnoNLnu30TeQzB4CBc4KhVrFVTwPJewnvT+p/qlgi3oZgKlNLu/+B4GIUhizuPxC/87/yIYQA==",
+            "content_md5": "e876bde95f9e82f88d6fc0a99a6db5a4",
+            "content_sha1": "02adc25fbad1f2cbba457a62093be738cc24926b",
+            "content_sha256": "a3d1c9c8da45454dafe6881b2e813aa750dbd5caa29c833e255fa570bdf98a44",
+            "content_sha512": "ba60a2c98fd4c1c230ca69e834b9eedf44de4330780817382a156b1554f03c97b09ef4fea7faa5822de86602a534bbbff81e06214862cee3f10bff3bff221840",
+            "directory_permission": "0777",
+            "file_permission": "0400",
+            "filename": "dev-key.pem",
+            "id": "02adc25fbad1f2cbba457a62093be738cc24926b",
+            "sensitive_content": null,
+            "source": null
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "content"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "sensitive_content"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "tls_private_key.dev_ssh_key"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "tls_private_key",
+      "name": "dev_ssh_key",
+      "provider": "provider[\"registry.terraform.io/hashicorp/tls\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "algorithm": "RSA",
+            "ecdsa_curve": "P224",
+            "id": "222112bf972fcf03621aa2ce86f281542fbe9a6c",
+            "private_key_openssh": "-----BEGIN OPENSSH PRIVATE KEY-----\n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\n-----END OPENSSH PRIVATE KEY-----\n",
+            "private_key_pem": "-----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----\n",
+            "private_key_pem_pkcs8": "-----BEGIN PRIVATE KEY-----\n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\nrM+adxfZry+7PTDq2GYl8WKEJa5q0g==\n-----END PRIVATE KEY-----\n",
+            "public_key_fingerprint_md5": "fc:fb:02:ba:99:78:65:5e:ba:5e:c2:60:7a:a2:30:9e",
+            "public_key_fingerprint_sha256": "SHA256:Vs5tGW7+A+nIshilYTznhBf0VoTDLc7FRjjKKspSqok",
+            "public_key_openssh": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCsWoTIq3ZCG0aUtPQZUMHPMJAPUg9PlrRhPDAdIaI0TAzlULvDxWRusJ1m5avcMVkRhaGTEsJZCvhY1KDaecsnPQgN2WJ1hOi9M/ZLB+vsY4BStS1c5vaSv1HM5ur0KhMJSNxpCbpQIdkBTMJcW9fusySbGJWh+t9xc8BdaF4IHbRsa6ONBTgk+zPQLhXlOuL6fQDuStzj91xgZHbnaNc4lxoxmeNK4p2O/lJJleUuXAyY7VWOp25+QyVvKgjaraAI5yymrtDL+K/heatNagGj19mKlt4SYcXmrDxtur3k/DbcdyHKWrJgf/2fV9VnekOA1neJX61Uem/M+aMyHpNlE2r3MjFiTuD/3vdYcryHegHgOWesqK7EcIsFd/wwyIwWGh6EjS1PyuEcKnTJfBtpbFOYB7knRKKQjt7lu225lt0ZoPaNmTSpOFB/J3nbSO8cm8acKtGuE2cJfBaljucdoKmRGTpY3C3ChRV7Ie+t1O8LmLPkFnOqM/slOyJpsInUm0o2FNchgUgExjtIZylyK53r/+5zzowI1IKbi1cjHXPv00mp0DWYXzrLPj2EYtgT12XrKuN0+0TUI9WIzP+UotR/+Z3NDtnGlZR8Simv0pwci9PRxwL0Xg8aBboEYaE3lbyXaMXNmeF4WnX5nA+Ufnsdp1fI4N4PL2GUc2Br8w==\n",
+            "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEArFqEyKt2QhtGlLT0GVDB\nzzCQD1IPT5a0YTwwHSGiNEwM5VC7w8VkbrCdZuWr3DFZEYWhkxLCWQr4WNSg2nnL\nJz0IDdlidYTovTP2Swfr7GOAUrUtXOb2kr9RzObq9CoTCUjcaQm6UCHZAUzCXFvX\n7rMkmxiVofrfcXPAXWheCB20bGujjQU4JPsz0C4V5Tri+n0A7krc4/dcYGR252jX\nOJcaMZnjSuKdjv5SSZXlLlwMmO1VjqdufkMlbyoI2q2gCOcspq7Qy/iv4XmrTWoB\no9fZipbeEmHF5qw8bbq95Pw23HchylqyYH/9n1fVZ3pDgNZ3iV+tVHpvzPmjMh6T\nZRNq9zIxYk7g/973WHK8h3oB4DlnrKiuxHCLBXf8MMiMFhoehI0tT8rhHCp0yXwb\naWxTmAe5J0SikI7e5bttuZbdGaD2jZk0qThQfyd520jvHJvGnCrRrhNnCXwWpY7n\nHaCpkRk6WNwtwoUVeyHvrdTvC5iz5BZzqjP7JTsiabCJ1JtKNhTXIYFIBMY7SGcp\nciud6//uc86MCNSCm4tXIx1z79NJqdA1mF86yz49hGLYE9dl6yrjdPtE1CPViMz/\nlKLUf/mdzQ7ZxpWUfEopr9KcHIvT0ccC9F4PGgW6BGGhN5W8l2jFzZnheFp1+ZwP\nlH57HadXyODeDy9hlHNga/MCAwEAAQ==\n-----END PUBLIC KEY-----\n",
+            "rsa_bits": 4096
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "private_key_openssh"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "private_key_pem"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "private_key_pem_pkcs8"
+              }
+            ]
+          ],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "nat_eip",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-0555853e2bef3008a",
+            "arn": "arn:aws:ec2:us-east-1:081009271281:elastic-ip/eipalloc-0555853e2bef3008a",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-0555853e2bef3008a",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "us-east-1",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-18-235-153-183.compute-1.amazonaws.com",
+            "public_ip": "18.235.153.183",
+            "public_ipv4_pool": "amazon",
+            "region": "us-east-1",
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ=="
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "static_ip",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "backend",
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-0d9f85b77a638eb66",
+            "arn": "arn:aws:ec2:us-east-1:081009271281:elastic-ip/eipalloc-0d9f85b77a638eb66",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-0d9f85b77a638eb66",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "us-east-1",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-34-230-198-201.compute-1.amazonaws.com",
+            "public_ip": "34.230.198.201",
+            "public_ipv4_pool": "amazon",
+            "region": "us-east-1",
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "data.terraform_remote_state.vpc"
+          ]
+        },
+        {
+          "index_key": "database",
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-00036e3fcf0de4b8b",
+            "arn": "arn:aws:ec2:us-east-1:081009271281:elastic-ip/eipalloc-00036e3fcf0de4b8b",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-00036e3fcf0de4b8b",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "us-east-1",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-98-86-138-120.compute-1.amazonaws.com",
+            "public_ip": "98.86.138.120",
+            "public_ipv4_pool": "amazon",
+            "region": "us-east-1",
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "data.terraform_remote_state.vpc"
+          ]
+        },
+        {
+          "index_key": "frontend",
+          "schema_version": 0,
+          "attributes": {
+            "address": null,
+            "allocation_id": "eipalloc-0d323018c1b3b3341",
+            "arn": "arn:aws:ec2:us-east-1:081009271281:elastic-ip/eipalloc-0d323018c1b3b3341",
+            "associate_with_private_ip": null,
+            "association_id": "",
+            "carrier_ip": "",
+            "customer_owned_ip": "",
+            "customer_owned_ipv4_pool": "",
+            "domain": "vpc",
+            "id": "eipalloc-0d323018c1b3b3341",
+            "instance": "",
+            "ipam_pool_id": null,
+            "network_border_group": "us-east-1",
+            "network_interface": "",
+            "private_dns": null,
+            "private_ip": "",
+            "ptr_record": "",
+            "public_dns": "ec2-34-225-187-127.compute-1.amazonaws.com",
+            "public_ip": "34.225.187.127",
+            "public_ipv4_pool": "amazon",
+            "region": "us-east-1",
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxODAwMDAwMDAwMDAsInJlYWQiOjkwMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMDB9fQ==",
+          "dependencies": [
+            "data.terraform_remote_state.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_route53_record",
+      "name": "app_server_a_record",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "backend",
+          "schema_version": 2,
+          "attributes": {
+            "alias": [],
+            "allow_overwrite": null,
+            "cidr_routing_policy": [],
+            "failover_routing_policy": [],
+            "fqdn": "python-processes-app.me",
+            "geolocation_routing_policy": [],
+            "geoproximity_routing_policy": [],
+            "health_check_id": "",
+            "id": "Z02573681BWQU9EQDQ3W1_python-processes-app.me_A",
+            "latency_routing_policy": [],
+            "multivalue_answer_routing_policy": false,
+            "name": "python-processes-app.me",
+            "records": [
+              "34.230.198.201"
+            ],
+            "set_identifier": "",
+            "timeouts": null,
+            "ttl": 60,
+            "type": "A",
+            "weighted_routing_policy": [],
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "name": "python-processes-app.me",
+            "set_identifier": null,
+            "type": "A",
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6MTgwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMiJ9",
+          "dependencies": [
+            "data.terraform_remote_state.vpc",
+            "module.dev_server.aws_eip.static_ip",
+            "module.dev_server.aws_route53_zone.my_app_zone"
+          ]
+        },
+        {
+          "index_key": "database",
+          "schema_version": 2,
+          "attributes": {
+            "alias": [],
+            "allow_overwrite": null,
+            "cidr_routing_policy": [],
+            "failover_routing_policy": [],
+            "fqdn": "python-processes-app.me",
+            "geolocation_routing_policy": [],
+            "geoproximity_routing_policy": [],
+            "health_check_id": "",
+            "id": "Z02573681BWQU9EQDQ3W1_python-processes-app.me_A",
+            "latency_routing_policy": [],
+            "multivalue_answer_routing_policy": false,
+            "name": "python-processes-app.me",
+            "records": [
+              "98.86.138.120"
+            ],
+            "set_identifier": "",
+            "timeouts": null,
+            "ttl": 60,
+            "type": "A",
+            "weighted_routing_policy": [],
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "name": "python-processes-app.me",
+            "set_identifier": null,
+            "type": "A",
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6MTgwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMiJ9",
+          "dependencies": [
+            "data.terraform_remote_state.vpc",
+            "module.dev_server.aws_eip.static_ip",
+            "module.dev_server.aws_route53_zone.my_app_zone"
+          ]
+        },
+        {
+          "index_key": "frontend",
+          "schema_version": 2,
+          "attributes": {
+            "alias": [],
+            "allow_overwrite": null,
+            "cidr_routing_policy": [],
+            "failover_routing_policy": [],
+            "fqdn": "python-processes-app.me",
+            "geolocation_routing_policy": [],
+            "geoproximity_routing_policy": [],
+            "health_check_id": "",
+            "id": "Z02573681BWQU9EQDQ3W1_python-processes-app.me_A",
+            "latency_routing_policy": [],
+            "multivalue_answer_routing_policy": false,
+            "name": "python-processes-app.me",
+            "records": [
+              "34.225.187.127"
+            ],
+            "set_identifier": "",
+            "timeouts": null,
+            "ttl": 60,
+            "type": "A",
+            "weighted_routing_policy": [],
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "name": "python-processes-app.me",
+            "set_identifier": null,
+            "type": "A",
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6MTgwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMiJ9",
+          "dependencies": [
+            "data.terraform_remote_state.vpc",
+            "module.dev_server.aws_eip.static_ip",
+            "module.dev_server.aws_route53_zone.my_app_zone"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_route53_record",
+      "name": "www",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "backend",
+          "schema_version": 2,
+          "attributes": {
+            "alias": [],
+            "allow_overwrite": null,
+            "cidr_routing_policy": [],
+            "failover_routing_policy": [],
+            "fqdn": "www.python-processes-app.me",
+            "geolocation_routing_policy": [],
+            "geoproximity_routing_policy": [],
+            "health_check_id": "",
+            "id": "Z02573681BWQU9EQDQ3W1_www.python-processes-app.me_A",
+            "latency_routing_policy": [],
+            "multivalue_answer_routing_policy": false,
+            "name": "www.python-processes-app.me",
+            "records": [
+              "34.230.198.201"
+            ],
+            "set_identifier": "",
+            "timeouts": null,
+            "ttl": 60,
+            "type": "A",
+            "weighted_routing_policy": [],
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "name": "www.python-processes-app.me",
+            "set_identifier": null,
+            "type": "A",
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6MTgwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMiJ9",
+          "dependencies": [
+            "data.terraform_remote_state.vpc",
+            "module.dev_server.aws_eip.static_ip",
+            "module.dev_server.aws_route53_zone.my_app_zone"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_route53_zone",
+      "name": "my_app_zone",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:route53:::hostedzone/Z02573681BWQU9EQDQ3W1",
+            "comment": "Managed by Terraform",
+            "delegation_set_id": "",
+            "force_destroy": false,
+            "id": "Z02573681BWQU9EQDQ3W1",
+            "name": "python-processes-app.me",
+            "name_servers": [
+              "ns-1367.awsdns-42.org",
+              "ns-1654.awsdns-14.co.uk",
+              "ns-417.awsdns-52.com",
+              "ns-933.awsdns-52.net"
+            ],
+            "primary_name_server": "ns-1654.awsdns-14.co.uk",
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null,
+            "vpc": [],
+            "zone_id": "Z02573681BWQU9EQDQ3W1"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6MTgwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "app_port",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:081009271281:security-group/sg-09f1c0f21afb55a7e",
+            "description": "Managed by Terraform",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-09f1c0f21afb55a7e",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow App Port 8000",
+                "from_port": 8000,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 8000
+              }
+            ],
+            "name": "terraform-20250812112132860700000004",
+            "name_prefix": "terraform-",
+            "owner_id": "081009271281",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-03c588669df4e6762"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "id": "sg-09f1c0f21afb55a7e",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "http",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:081009271281:security-group/sg-0dd87422cdc53d1ea",
+            "description": "Managed by Terraform",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-0dd87422cdc53d1ea",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow HTTP",
+                "from_port": 80,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 80
+              }
+            ],
+            "name": "terraform-20250812112132852200000002",
+            "name_prefix": "terraform-",
+            "owner_id": "081009271281",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-03c588669df4e6762"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "id": "sg-0dd87422cdc53d1ea",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "https",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:081009271281:security-group/sg-0d4aa129351d8d34d",
+            "description": "Managed by Terraform",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-0d4aa129351d8d34d",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow HTTPS",
+                "from_port": 443,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 443
+              }
+            ],
+            "name": "terraform-20250812112132872100000005",
+            "name_prefix": "terraform-",
+            "owner_id": "081009271281",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-03c588669df4e6762"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "id": "sg-0d4aa129351d8d34d",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "module": "module.dev_server",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "ssh",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:081009271281:security-group/sg-03178b47e6868eaf6",
+            "description": "Managed by Terraform",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-03178b47e6868eaf6",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow SSH",
+                "from_port": 22,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 22
+              }
+            ],
+            "name": "terraform-20250812112132852600000003",
+            "name_prefix": "terraform-",
+            "owner_id": "081009271281",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": {},
+            "tags_all": {
+              "Environment": "dev",
+              "Terraform": "true"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-03c588669df4e6762"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "081009271281",
+            "id": "sg-03178b47e6868eaf6",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

@@ -3,6 +3,10 @@ import subprocess
 
 app = FastAPI()
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.get("/")
 async def get_process():
     my_processes = []

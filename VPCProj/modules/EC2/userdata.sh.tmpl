@@ -1,0 +1,42 @@
+#!/bin/bash
+set -e
+
+# --- Basic Setup for Ubuntu ---
+apt-get update -y
+# Install prerequisites for Docker and AWS CLI
+apt-get install -y docker.io jq unzip curl
+
+# --- Install AWS CLI v2 ---
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+
+# --- Start Docker ---
+systemctl start docker
+systemctl enable docker
+
+# --- Dynamic Configuration ---
+# This part is unchanged and correct
+EC2_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+AWS_ACCOUNT_ID=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .accountId)
+
+# --- ECR Authentication ---
+# This part is unchanged and correct
+aws ecr get-login-password --region $EC2_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$EC2_REGION.amazonaws.com
+
+# --- Get Image URI from SSM ---
+# This part is unchanged and correct
+IMAGE_URI=$(aws ssm get-parameter --name "/my-app/image" --region $EC2_REGION --query "Parameter.Value" --output text)
+
+# --- Stop and Remove Old Container (if any) ---
+# This part is unchanged and correct
+CONTAINER_NAME="my-app-container"
+docker stop $CONTAINER_NAME || true
+docker rm $CONTAINER_NAME || true
+
+# --- Run the New Container ---
+# This part is unchanged and correct
+docker run -d \
+  --name $CONTAINER_NAME \
+  -p 80:8000 \
+  "$IMAGE_URI"

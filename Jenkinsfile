@@ -74,16 +74,6 @@ node('docker-agent-dynamic') {
         stage('Deploy') {
       withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
         sshagent(credentials: ['ec2-ssh-key']) {
-                  /* sh '''
-                    echo "=== DEBUG: Checking SSH agent keys ==="
-                    ssh-add -l || echo "No keys loaded"
-
-                    echo "=== DEBUG: Printing public key being used ==="
-                    ssh-add -L || echo "No keys found"
-
-                    echo "=== Attempting SSH connection to VM ==="
-                    ssh -o StrictHostKeyChecking=no ahmad@192.168.0.173 "echo SUCCESS: Jenkins key works!"
-                   '''*/
           sh """
               ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --extra-vars "DOCKER_USER=${DOCKER_USER} DOCKER_PASS=${DOCKER_PASS} FULL_IMAGE_NAME=${fullImageName} DOMAIN_NAME=python-processes-app.me"
           """
