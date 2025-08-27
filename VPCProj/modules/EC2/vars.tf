@@ -6,6 +6,7 @@ variable "instance_type" {
     min_size         = optional(number, 1)   # ASG minimum instances
     max_size         = optional(number, 3)   # ASG maximum instances
     desired_capacity = optional(number, 1)   # ASG desired instances
+    user_data        = optional(string)
 
     instance_type = string
     disk_size     = number
@@ -53,4 +54,34 @@ variable "vpc_id" {
 variable "private_subnet_ids" {
   description = "A list of public subnet IDs for the NLB."
   type        = list(string)
+}
+
+variable "aws_ami_ecs_id" {
+  description = "The ID of the AMI to use for the ecs."
+  type        = string
+}
+
+variable "app_image" {
+  description = "my app image"
+  type        = string
+}
+
+# variable "user_data" {
+#   description = "the user data scripting file"
+#   type = string 
+# }
+
+variable "region" {
+  description = "the region"
+  type        = string
+}
+
+variable "account_id" {
+  description = "aws account id"
+  type        = string
+}
+
+variable "acm_certificate_arn" {
+  description = "The ARN of the ACM certificate for the TLS listener."
+  type        = string
 }

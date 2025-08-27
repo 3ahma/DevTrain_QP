@@ -1,5 +1,7 @@
 resource "aws_lb" "dev_nlb" {
 
+  count              = contains(keys(var.instance_type), "ecs") ? 1 : 0
+
  // for_each      = var.instance_type  
   name               = "dev-nlb"
   load_balancer_type = "network"

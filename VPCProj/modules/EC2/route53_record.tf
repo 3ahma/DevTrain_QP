@@ -23,5 +23,5 @@ resource "aws_route53_record" "asg_record" {
   name     = "${each.key}.${var.domain_name}"
   type     = "CNAME"
   ttl      = 60
-  records  = [aws_lb.dev_nlb.dns_name]
+  records  = [aws_lb.dev_nlb[0].dns_name]
 }

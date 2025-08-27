@@ -15,3 +15,8 @@ output "frontend_tg_arn" {
 output "backend_tg_arn" {
   value = aws_lb_target_group.backend.arn
 }
+
+# output "ecs_cluster_name" {
+#   description = "The name of the ECS cluster."
+#   value       = contains(keys(var.instance_type), "ecs") ? aws_ecs_cluster.ecs[0].name : null
+# }

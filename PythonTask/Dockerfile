@@ -1,6 +1,6 @@
 FROM python:3.13-slim
 
-RUN apt-get update && apt-get install -y procps
+RUN apt-get update && apt-get install -y procps && apt-get install -y curl
 
 WORKDIR /app
 
